@@ -6,3 +6,5 @@ tmdb_access_token:
 spotipy_client_id:
 spotipy_client_secret:
 spotipy_redirect_uri:
+
+gpt_model: gpt-3.5-turbo-instruct
