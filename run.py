@@ -24,6 +24,7 @@ def main():
     os.environ['SPOTIPY_REDIRECT_URI'] = config['spotipy_redirect_uri']
     os.environ['gpt_model'] = config['gpt_model']
 
+
     logging.basicConfig(
         format="%(message)s",
         handlers=[logging.StreamHandler(ColorPrint())],
@@ -60,6 +61,7 @@ def main():
     requests_wrapper = Requests(headers=headers)
 
     llm = OpenAI(model_name=os.environ['gpt_model'], temperature=0.0, max_tokens=700)
+
     rest_gpt = RestGPT(llm, api_spec=api_spec, scenario=scenario, requests_wrapper=requests_wrapper, simple_parser=False)
 
     if scenario == 'tmdb':
