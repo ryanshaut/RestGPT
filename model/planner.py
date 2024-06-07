@@ -3,8 +3,8 @@ import re
 
 from langchain.chains.base import Chain
 from langchain.chains.llm import LLMChain
-from langchain.prompts.prompt import PromptTemplate
-from langchain.llms.base import BaseLLM
+from langchain_core.language_models import BaseLLM
+from langchain_core.prompts import PromptTemplate
 
 icl_examples = {
     "tmdb": """Example 1:

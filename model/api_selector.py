@@ -4,11 +4,10 @@ import logging
 
 from langchain.chains.base import Chain
 from langchain.chains.llm import LLMChain
-from langchain.prompts.base import BasePromptTemplate
-from langchain.prompts.prompt import PromptTemplate
-from langchain.llms.base import BaseLLM
 
 from utils import ReducedOpenAPISpec, get_matched_endpoint
+from langchain_core.language_models import BaseLLM
+from langchain_core.prompts import BasePromptTemplate, PromptTemplate
 
 logger = logging.getLogger(__name__)
 

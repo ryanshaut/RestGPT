@@ -6,11 +6,11 @@ import time
 import yaml
 
 import spotipy
-from langchain.requests import Requests
-from langchain import OpenAI
 
 from utils import reduce_openapi_spec, ColorPrint
 from model import RestGPT
+from langchain_community.utilities import Requests
+from langchain_openai import OpenAI
 
 logger = logging.getLogger()
 
@@ -22,7 +22,7 @@ def main():
     os.environ['SPOTIPY_CLIENT_ID'] = config['spotipy_client_id']
     os.environ['SPOTIPY_CLIENT_SECRET'] = config['spotipy_client_secret']
     os.environ['SPOTIPY_REDIRECT_URI'] = config['spotipy_redirect_uri']
-        
+
     logging.basicConfig(
         format="%(message)s",
         handlers=[logging.StreamHandler(ColorPrint())],
@@ -58,7 +58,7 @@ def main():
 
     requests_wrapper = Requests(headers=headers)
 
-    llm = OpenAI(model_name="text-davinci-003", temperature=0.0, max_tokens=700)
+    llm = OpenAI(model_name="gpt-3.5-turbo-instruct", temperature=0.0, max_tokens=700)
     rest_gpt = RestGPT(llm, api_spec=api_spec, scenario=scenario, requests_wrapper=requests_wrapper, simple_parser=False)
 
     if scenario == 'tmdb':
@@ -69,7 +69,7 @@ def main():
     query = input("Please input an instruction (Press ENTER to use the example instruction): ")
     if query == '':
         query = query_example
-    
+
     logger.info(f"Query: {query}")
 
     start_time = time.time()
