@@ -12,11 +12,11 @@ import tiktoken
 from langchain.chains.base import Chain
 from langchain.chains.llm import LLMChain
 from langchain.requests import RequestsWrapper
-from langchain.prompts.prompt import PromptTemplate
-from langchain.llms.base import BaseLLM
 
 from utils import simplify_json, get_matched_endpoint, ReducedOpenAPISpec, fix_json_error
 from .parser import ResponseParser, SimpleResponseParser
+from langchain_core.language_models import BaseLLM
+from langchain_core.prompts import PromptTemplate
 
 
 logger = logging.getLogger(__name__)
