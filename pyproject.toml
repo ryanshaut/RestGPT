@@ -1,0 +1,20 @@
+[tool.poetry]
+name = "restgpt"
+version = "0.1.0"
+description = "Call custom APIs using LLMs"
+authors = ["ryan shaut <ryan.shaut@ansys.com>"]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.10"
+spotipy = "^2.24.0"
+langchain-community = "^0.2.4"
+
+
+
+[tool.poetry.group.dev.dependencies]
+langchain-cli = "^0.0.24"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
