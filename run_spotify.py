@@ -20,6 +20,7 @@ def main():
     os.environ['SPOTIPY_CLIENT_ID'] = config['spotipy_client_id']
     os.environ['SPOTIPY_CLIENT_SECRET'] = config['spotipy_client_secret']
     os.environ['SPOTIPY_REDIRECT_URI'] = config['spotipy_redirect_uri']
+    os.environ['gpt_model'] = config['gpt_model']
 
     query_idx = 1
 
@@ -46,7 +47,8 @@ def main():
 
     requests_wrapper = Requests(headers=headers)
 
-    llm = OpenAI(model_name="gpt-3.5-turbo-instruct", temperature=0.0, max_tokens=700)
+    llm = OpenAI(model_name=os.environ['gpt_model'], temperature=0.0, max_tokens=700)
+
     # llm = OpenAI(model_name="gpt-3.5-turbo-0301", temperature=0.0)
     rest_gpt = RestGPT(llm, api_spec=api_spec, scenario='spotify', requests_wrapper=requests_wrapper, simple_parser=False)
 

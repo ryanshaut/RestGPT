@@ -13,7 +13,8 @@ logger = logging.getLogger()
 
 
 def run(query, api_spec, requests_wrapper, simple_parser=False):
-    llm = OpenAI(model_name="gpt-4-turbo", temperature=0.0, max_tokens=256)
+    llm = OpenAI(model_name=os.environ['gpt_model'], temperature=0.0, max_tokens=256)
+
     # llm = OpenAI(model_name="gpt-3.5-turbo-0301", temperature=0.0, max_tokens=256)
     rest_gpt = RestGPT(llm, api_spec=api_spec, scenario='tmdb', requests_wrapper=requests_wrapper, simple_parser=simple_parser)
 
@@ -28,6 +29,7 @@ def main():
     config = yaml.load(open('config.yaml', 'r'), Loader=yaml.FullLoader)
     os.environ["OPENAI_API_KEY"] = config['openai_api_key']
     os.environ["TMDB_ACCESS_TOKEN"] = config['tmdb_access_token']
+    os.environ['gpt_model'] = config['gpt_model']
 
     log_dir = os.path.join("logs", "restgpt_tmdb")
     if not os.path.exists(log_dir):
