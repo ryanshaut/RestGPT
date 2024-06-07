@@ -20,8 +20,8 @@ logger = logging.getLogger(__name__)
 RESPONSE_SCHEMA_MAX_LENGTH = 5000
 
 
-CODE_PARSING_SCHEMA_TEMPLATE = """Here is an API response schema from an OAS and a query. 
-The API's response will follow the schema and be a JSON. 
+CODE_PARSING_SCHEMA_TEMPLATE = """Here is an API response schema from an OAS and a query.
+The API's response will follow the schema and be a JSON.
 Assume you are given a JSON response which is stored in a python dict variable called 'data', your task is to generate Python code to extract information I need from the API response.
 Note: I will give you 'data', do not make up one, just reference it in your code.
 Please print the final result as brief as possible. If the result is a list, just print it in one sentence. Do not print each item in a new line.
@@ -57,7 +57,7 @@ Begin!
 Python Code:
 """
 
-CODE_PARSING_RESPONSE_TEMPLATE = """Here is an API response JSON snippet with its corresponding schema and a query. 
+CODE_PARSING_RESPONSE_TEMPLATE = """Here is an API response JSON snippet with its corresponding schema and a query.
 The API's response JSON follows the schema.
 Assume the JSON response is stored in a python dict variable called 'data', your task is to generate Python code to extract information I need from the API response.
 Please print the final result.
@@ -122,8 +122,8 @@ If the response indicates an error, you should instead output a summary of the e
 Output:
 """
 
-CODE_PARSING_EXAMPLE_TEMPLATE = """Here is an API response schema and a query. 
-The API's response will follow the schema and be a JSON. 
+CODE_PARSING_EXAMPLE_TEMPLATE = """Here is an API response schema and a query.
+The API's response will follow the schema and be a JSON.
 Assume you are given a JSON response which is stored in a python dict variable called 'data', your task is to generate Python code to extract information I need from the API response.
 Please print the final result.
 The example result format are:
@@ -149,7 +149,7 @@ Output: The ids and names of the albums from Lana Del Rey are [{{'id': '5HOHne1w
 
 Begin!
 Input: {truncated_str}
-Output: 
+Output:
 """
 
 
@@ -253,11 +253,11 @@ class ResponseParser(Chain):
             input_variables=["truncated_str"]
         )
 
-        super().__init__(llm=llm, 
-                         code_parsing_schema_prompt=code_parsing_schema_prompt, 
-                         code_parsing_response_prompt=code_parsing_response_prompt, 
-                         llm_parsing_prompt=llm_parsing_prompt, 
-                         postprocess_prompt=postprocess_prompt, 
+        super().__init__(llm=llm,
+                         code_parsing_schema_prompt=code_parsing_schema_prompt,
+                         code_parsing_response_prompt=code_parsing_response_prompt,
+                         llm_parsing_prompt=llm_parsing_prompt,
+                         postprocess_prompt=postprocess_prompt,
                          encoder=encoder)
 
     @property
@@ -288,7 +288,7 @@ class ResponseParser(Chain):
             extract_code_chain = LLMChain(llm=self.llm, prompt=self.llm_parsing_prompt)
             output = extract_code_chain.predict(query=inputs['query'], json=inputs['json'], api_param=inputs['api_param'], response_description=inputs['response_description'])
             return {"result": output}
-        
+
         extract_code_chain = LLMChain(llm=self.llm, prompt=self.code_parsing_schema_prompt)
         code = extract_code_chain.predict(query=inputs['query'], response_description=inputs['response_description'], api_param=inputs['api_param'])
         logger.info(f"Code: \n{code}")
@@ -327,7 +327,7 @@ class ResponseParser(Chain):
 
         return {"result": output}
 
-    
+
 
 
 class SimpleResponseParser(Chain):
@@ -396,7 +396,7 @@ class SimpleResponseParser(Chain):
             extract_code_chain = LLMChain(llm=self.llm, prompt=self.llm_parsing_prompt)
             output = extract_code_chain.predict(query=inputs['query'], json=inputs['json'], api_param=inputs['api_param'], response_description=inputs['response_description'])
             return {"result": output}
-        
+
         encoded_json = self.encoder.encode(inputs["json"])
         extract_code_chain = LLMChain(llm=self.llm, prompt=self.llm_parsing_prompt)
         if len(encoded_json) > self.max_json_length:
@@ -404,5 +404,3 @@ class SimpleResponseParser(Chain):
         output = extract_code_chain.predict(query=inputs['query'], json=encoded_json, api_param=inputs['api_param'], response_description=inputs['response_description'])
 
         return {"result": output}
-
-    

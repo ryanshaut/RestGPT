@@ -1,0 +1,15 @@
+[
+    {
+        "query": "Tell me a dad joke",
+        "solution": [
+            "GET /"
+        ]
+    },
+    {
+        "query": "Get me a dad joke about mushrooms",
+        "solution": [
+            "GET /search?term={term}",
+            "GET /j/{joke_id}"
+        ]
+    }
+]

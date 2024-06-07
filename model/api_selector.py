@@ -64,6 +64,12 @@ Background: The ids and names of the tracks of the album 1JnjcAIKQ9TSJFVFierTB8 
 User query: append the first song of the newest album 1JnjcAIKQ9TSJFVFierTB8 of Coldplay (id 4gzpq5DPGxSnKTe4SA8HAU) to my player queue.
 API calling 1: POST /me/player/queue to add Yellow (3AJwUDP919kvQ9QcozQPxg) to the player queue
 API response: Yellow is added to the player queue
+""",
+    "dadjoke": """Example 1:
+    Background: No background
+    User query: Tell me a dad joke.
+    API calling 1: GET / to get a dad joke
+    API response: A dad joke is a short joke, typically a pun, presented as a one-liner or question and answer, but not a narrative.
 """
 }
 
@@ -130,11 +136,11 @@ class APISelector(Chain):
     @property
     def input_keys(self) -> List[str]:
         return ["plan", "background"]
-    
+
     @property
     def output_keys(self) -> List[str]:
         return [self.output_key]
-    
+
     @property
     def observation_prefix(self) -> str:
         """Prefix to append the observation with."""
@@ -144,14 +150,14 @@ class APISelector(Chain):
     def llm_prefix(self) -> str:
         """Prefix to append the llm call with."""
         return "API calling {}: "
-    
+
     @property
     def _stop(self) -> List[str]:
         return [
             f"\n{self.observation_prefix.rstrip()}",
             f"\n\t{self.observation_prefix.rstrip()}",
         ]
-    
+
     def _construct_scratchpad(
         self, history: List[Tuple[str, str]], instruction: str
     ) -> str:
@@ -165,7 +171,7 @@ class APISelector(Chain):
             scratchpad += self.observation_prefix + execution_res + "\n"
         scratchpad += "Instruction: " + instruction + "\n"
         return scratchpad
-    
+
     def _call(self, inputs: Dict[str, Any]) -> Dict[str, str]:
         # inputs: background, plan, (optional) history, instruction
         if 'history' in inputs:
@@ -174,7 +180,7 @@ class APISelector(Chain):
             scratchpad = ""
         api_selector_chain = LLMChain(llm=self.llm, prompt=self.api_selector_prompt)
         api_selector_chain_output = api_selector_chain.run(plan=inputs['plan'], background=inputs['background'], agent_scratchpad=scratchpad, stop=self._stop)
-        
+
         api_plan = re.sub(r"API calling \d+: ", "", api_selector_chain_output).strip()
 
         logger.info(f"API Selector: {api_plan}")
@@ -182,7 +188,7 @@ class APISelector(Chain):
         finish = re.match(r"No API call needed.(.*)", api_plan)
         if finish is not None:
             return {"result": api_plan}
-            
+
 
         while get_matched_endpoint(self.api_spec, api_plan) is None:
             logger.info("API Selector: The API you called is not in the list of available APIs. Please use another API.")

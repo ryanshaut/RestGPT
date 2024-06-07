@@ -50,6 +50,25 @@ Plan step 5: Add the most popular songs by Coldplay, Yellow (3AJwUDP919kvQ9QcozQ
 API response: Successfully called POST /playlists/7LjHVU3t3fcxj5aiPFEW4T/tracks to add Yellow (3AJwUDP919kvQ9QcozQPxg), Viva La Vida (1mea3bSkSGXuIRvnydlB5b) in playlist "Love Coldplay" (7LjHVU3t3fcxj5aiPFEW4T). The playlist id is 7LjHVU3t3fcxj5aiPFEW4T.
 Thought: I am finished executing a plan and have the data the used asked to create
 Final Answer: I have made a new playlist called "Love Coldplay" containing Yellow and Viva La Vida by Coldplay.
+""",
+    "dadjoke": """Example 1:
+User query: Tell me a dad joke
+Plan step 1: Get a dad joke
+API Response: Successfully called GET / to get a dad joke.
+Thought: I am finished executing a plan and have the information the user asked for or the data the used asked to create
+Final Answer: Random Dad joke text
+
+Example 2:
+User query: Tell me a dad joke about rabbits
+Plan step 1: Search for dad jokes about rabbits
+API Response: Successfully called GET /search?term={{term}} to get a list of dad jokes.
+Plan step 2: Pick a random joke id from the list of dad jokes about rabbits
+API response: The joke id is 1234
+Plan step 3: Get the joke with id 1234
+API response: Successfully called GET /j/1234 to get the joke.
+Thought: I am finished executing a plan and have the information the user asked for or the data the used asked to create
+Final Answer: Dad joke about {{term}}
+
 """
 }
 
@@ -101,11 +120,11 @@ class Planner(Chain):
     @property
     def input_keys(self) -> List[str]:
         return ["input"]
-    
+
     @property
     def output_keys(self) -> List[str]:
         return [self.output_key]
-    
+
     @property
     def observation_prefix(self) -> str:
         """Prefix to append the observation with."""
@@ -115,14 +134,14 @@ class Planner(Chain):
     def llm_prefix(self) -> str:
         """Prefix to append the llm call with."""
         return "Plan step {}: "
-    
+
     @property
     def _stop(self) -> List[str]:
         return [
             f"\n{self.observation_prefix.rstrip()}",
             f"\n\t{self.observation_prefix.rstrip()}",
         ]
-    
+
     def _construct_scratchpad(
         self, history: List[Tuple[str, str]]
     ) -> str:

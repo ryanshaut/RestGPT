@@ -47,10 +47,11 @@ class RestGPT(Chain):
         if scenario in ['TMDB', 'Tmdb']:
             scenario = 'tmdb'
         if scenario in ['Spotify']:
-            scenario = 'spotify' 
-        if scenario not in ['tmdb', 'spotify']:
-            raise ValueError(f"Invalid scenario {scenario}")
-        
+            scenario = 'spotify'
+        else: scenario = scenario.lower()
+        # if scenario not in ['tmdb', 'spotify']:
+        #     raise ValueError(f"Invalid scenario {scenario}")
+
         planner = Planner(llm=llm, scenario=scenario)
         api_selector = APISelector(llm=llm, scenario=scenario, api_spec=api_spec)
 
@@ -86,7 +87,7 @@ class RestGPT(Chain):
         :meta private:
         """
         return self.planner.output_keys
-    
+
     def debug_input(self) -> str:
         print("Debug...")
         return input()
@@ -120,7 +121,7 @@ class RestGPT(Chain):
         if re.search("Continue", plan):
             return True
         return False
-    
+
     def _should_end(self, plan) -> bool:
         if re.search("Final Answer", plan):
             return True
@@ -163,7 +164,7 @@ class RestGPT(Chain):
             while self._should_continue_plan(plan):
                 api_selector_background = self._get_api_selector_background(planner_history)
                 api_plan = self.api_selector.run(plan=tmp_planner_history[0], background=api_selector_background, history=api_selector_history, instruction=plan)
-                
+
                 finished = re.match(r"No API call needed.(.*)", api_plan)
                 if not finished:
                     executor = Caller(llm=self.llm, api_spec=self.api_spec, scenario=self.scenario, simple_parser=self.simple_parser, requests_wrapper=self.requests_wrapper)
